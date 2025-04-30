@@ -1,0 +1,35 @@
+.about-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.about-section {
+    margin-bottom: 30px;
+}
+
+.about-section h3 {
+    color: #0A3D91;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #0A3D91;
+    padding-bottom: 8px;
+    display: inline-block;
+}
+
+.about-section ul {
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.about-section li {
+    margin-bottom: 8px;
+}
+
+.about-section i {
+    color: #0A3D91;
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}

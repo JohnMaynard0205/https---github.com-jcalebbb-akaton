@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOTEPATH - Track Your Ballot</title>
+    <link rel="stylesheet" href="style/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="style/images/VOTEPATH.png" alt="VOTEPATH Logo" class="logo">
+            <h1>VOTEPATH</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="home.html" class="active">HOME</a></li>
+                <li><a href="map.html">MAP</a></li>
+                <li><a href="about.html">ABOUT</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="content">
+            <h2>Track Your Ballot and Election Materials in Real Time</h2>
+            
+            <div class="slideshow-container">
+                <div class="slideshow">
+                    <div class="slide active">
+                        <img src="style/images/comelec.jpg" alt="Election materials being transported">
+                    </div>
+                    <div class="slide">
+                        <img src="style/images/voter.jpg" alt="Ballot tracking system">
+                    </div>
+                    <div class="slide">
+                        <img src="style/images/voterline.png" alt="Election day preparations">
+                    </div>
+                </div>
+                
+                <button class="prev-btn" aria-label="Previous slide">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="next-btn" aria-label="Next slide">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature">
+                <i class="fas fa-map-marked-alt"></i>
+                <h3>Real-Time Tracking</h3>
+                <p>Follow the journey of your ballot from printing to counting.</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Secure System</h3>
+                <p>Our tracking system ensures transparency and security.</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-info-circle"></i>
+                <h3>Stay Informed</h3>
+                <p>Receive updates about election materials in your area.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 VOTEPATH. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Slideshow functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let slideInterval;
+
+        function showSlide(index) {
+            // Remove active class from all slides
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Add active class to current slide
+            slides[index].classList.add('active');
+            currentSlide = index;
+        }
+
+        function nextSlide() {
+            showSlide((currentSlide + 1) % totalSlides);
+        }
+
+        function prevSlide() {
+            showSlide((currentSlide - 1 + totalSlides) % totalSlides);
+        }
+
+        // Auto advance slides
+        function startSlideshow() {
+            slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+        }
+
+        function stopSlideshow() {
+            clearInterval(slideInterval);
+        }
+
+        // Event listeners for buttons
+        document.querySelector('.next-btn').addEventListener('click', function() {
+            stopSlideshow();
+            nextSlide();
+            startSlideshow();
+        });
+
+        document.querySelector('.prev-btn').addEventListener('click', function() {
+            stopSlideshow();
+            prevSlide();
+            startSlideshow();
+        });
+
+        // Start the slideshow when page loads
+        startSlideshow();
+    </script>
+</body>
+</html>
