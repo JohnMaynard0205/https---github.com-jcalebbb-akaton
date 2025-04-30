@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="style/map-style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <style>
+        
+    </style>
 </head>
 <body>
     <header>
@@ -45,17 +48,51 @@
                 <div id="map"></div>
             </div>
             
+            <!-- Ballot Progress Tracking Display -->
+            <div id="ballot-progress-display" class="ballot-progress-container">
+                <h3 class="progress-title">Ballot Journey Tracking</h3>
+                <div class="ballot-id-display">Tracking Ballot: <span id="tracking-ballot-id">PH2025-XXXXX</span></div>
+                
+                <div class="progress-tracker">
+                    <div class="progress-step" id="step-1">
+                        <img src="style/images/comelecLogo.png" alt="COMELEC" class="progress-icon" id="icon-1">
+                        <div class="progress-label" id="label-1">Registered</div>
+                    </div>
+                    
+                    <div class="progress-line" id="line-1-2"></div>
+                    
+                    <div class="progress-step" id="step-2">
+                        <img src="style/images/voteLogo.png" alt="Ballot Box" class="progress-icon" id="icon-2">
+                        <div class="progress-label" id="label-2">Prepared</div>
+                    </div>
+                    
+                    <div class="progress-line" id="line-2-3"></div>
+                    
+                    <div class="progress-step" id="step-3">
+                        <img src="style/images/sortingLogo.png" alt="Precinct" class="progress-icon" id="icon-3">
+                        <div class="progress-label" id="label-3">Delivered</div>
+                    </div>
+                    
+                    <div class="progress-line" id="line-3-4"></div>
+                    
+                    <div class="progress-step" id="step-4">
+                        <img src="style/images/checkedLogo.png" alt="Counted" class="progress-icon" id="icon-4">
+                        <div class="progress-label" id="label-4">Counted</div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="location-list">
                 <h3>Recent Updates</h3>
-                <div class="location-item" data-lat="14.5995" data-lng="120.9842">
+                <div class="location-item" data-lat="14.5995" data-lng="120.9842" data-status="Delivered">
                     Manila City Hall <span class="location-status status-delivered">Delivered</span>
                     <p>Ballots and machines delivered on April 28, 2025</p>
                 </div>
-                <div class="location-item" data-lat="14.6507" data-lng="121.0493">
+                <div class="location-item" data-lat="14.6507" data-lng="121.0493" data-status="In Transit">
                     Quezon City Hall <span class="location-status status-transit">In Transit</span>
                     <p>Materials expected to arrive on April 30, 2025</p>
                 </div>
-                <div class="location-item" data-lat="14.5515" data-lng="121.0500">
+                <div class="location-item" data-lat="14.5515" data-lng="121.0500" data-status="Preparing">
                     Makati City Hall <span class="location-status status-preparing">Preparing</span>
                     <p>Materials being prepared for shipment</p>
                 </div>
@@ -129,11 +166,98 @@
             const makatiMarker = L.marker([14.5515, 121.0500], {icon: preparingIcon}).addTo(map)
                 .bindPopup("<b>Makati City Hall</b><br>Status: Preparing<br>Materials being prepared for shipment");
             
+            // Progress tracker elements
+            const ballotProgressDisplay = document.getElementById('ballot-progress-display');
+            const trackingBallotId = document.getElementById('tracking-ballot-id');
+            
+            // Progress icons and labels
+            const icons = {
+                1: document.getElementById('icon-1'),
+                2: document.getElementById('icon-2'),
+                3: document.getElementById('icon-3'),
+                4: document.getElementById('icon-4')
+            };
+            
+            const labels = {
+                1: document.getElementById('label-1'),
+                2: document.getElementById('label-2'),
+                3: document.getElementById('label-3'),
+                4: document.getElementById('label-4')
+            };
+            
+            const lines = {
+                "1-2": document.getElementById('line-1-2'),
+                "2-3": document.getElementById('line-2-3'),
+                "3-4": document.getElementById('line-3-4')
+            };
+            
+            // Function to update progress tracker based on status
+            function updateProgressTracker(status, ballotNumber = '') {
+                // Show the progress tracker
+                ballotProgressDisplay.style.display = 'block';
+                
+                // Update ballot ID display
+                trackingBallotId.textContent = ballotNumber || 'Location-based tracking';
+                
+                // Reset all elements to inactive first
+                for (let i = 1; i <= 4; i++) {
+                    icons[i].classList.add('inactive');
+                    labels[i].classList.add('inactive');
+                }
+                
+                for (const lineKey in lines) {
+                    lines[lineKey].classList.add('inactive');
+                }
+                
+                // Update based on status
+                if (status === 'Preparing') {
+                    // Only first two steps are active
+                    icons[1].classList.remove('inactive');
+                    labels[1].classList.remove('inactive');
+                    icons[2].classList.remove('inactive');
+                    labels[2].classList.remove('inactive');
+                    lines["1-2"].classList.remove('inactive');
+                } 
+                else if (status === 'In Transit') {
+                    // First three steps are active
+                    icons[1].classList.remove('inactive');
+                    labels[1].classList.remove('inactive');
+                    icons[2].classList.remove('inactive');
+                    labels[2].classList.remove('inactive');
+                    lines["1-2"].classList.remove('inactive');
+                    // The delivery is in progress
+                    lines["2-3"].classList.remove('inactive');
+                } 
+                else if (status === 'Delivered') {
+                    // First three steps are active
+                    icons[1].classList.remove('inactive');
+                    labels[1].classList.remove('inactive');
+                    icons[2].classList.remove('inactive');
+                    labels[2].classList.remove('inactive');
+                    icons[3].classList.remove('inactive');
+                    labels[3].classList.remove('inactive');
+                    lines["1-2"].classList.remove('inactive');
+                    lines["2-3"].classList.remove('inactive');
+                } 
+                else if (status === 'Counted') {
+                    // All steps are active
+                    for (let i = 1; i <= 4; i++) {
+                        icons[i].classList.remove('inactive');
+                        labels[i].classList.remove('inactive');
+                    }
+                    
+                    for (const lineKey in lines) {
+                        lines[lineKey].classList.remove('inactive');
+                    }
+                }
+            }
+            
             // Add click events to location list items
             document.querySelectorAll('.location-item').forEach(item => {
                 item.addEventListener('click', function() {
                     const lat = parseFloat(this.getAttribute('data-lat'));
                     const lng = parseFloat(this.getAttribute('data-lng'));
+                    const status = this.getAttribute('data-status');
                     
                     map.setView([lat, lng], 14);
                     
@@ -145,7 +269,23 @@
                     } else if (lat === 14.5515 && lng === 121.0500) {
                         makatiMarker.openPopup();
                     }
+                    
+                    // Update the progress tracker
+                    updateProgressTracker(status);
                 });
+            });
+            
+            // Add click events to map markers
+            manilaMarker.on('click', function() {
+                updateProgressTracker('Delivered');
+            });
+            
+            quezonMarker.on('click', function() {
+                updateProgressTracker('In Transit');
+            });
+            
+            makatiMarker.on('click', function() {
+                updateProgressTracker('Preparing');
             });
 
             // Ballot Search Functionality
@@ -213,6 +353,9 @@
                     // Show the modal
                     ballotModal.style.display = 'flex';
                     
+                    // Update the progress tracker
+                    updateProgressTracker(ballot.status, ballot.number);
+                    
                 } else {
                     // Ballot not found
                     ballotInfoContent.innerHTML = `
@@ -223,6 +366,9 @@
                     
                     // Show the modal
                     ballotModal.style.display = 'flex';
+                    
+                    // Hide the progress tracker
+                    ballotProgressDisplay.style.display = 'none';
                 }
             });
 
